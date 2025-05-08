@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">RFID</string>
+    <string name="scan">Scan</string>
+    <string name="stop">Stop</string>
+    <string name="clear">Clear</string>
+    <string name="receive">Receive</string>
+    <string name="dispatch">Dispatch</string>
+    <string name="tags">Tags: </string>
+    <string name="speed">Speed: </string>
+    <string name="time">Time: </string>
+    <string name="no">No.</string>
+    <string name="serial_number">Serial number</string>
+    <string name="quantity">Quantity</string>
+    <string name="toggle_language">中文</string>
+    <string name="error_port">Error opening connection port: %1$s</string>
+    <string name="error_rfid_connection">RFID Connection Failed</string>
+    <string name="error_generic">Error: %1$s</string>
+    <string name="items_received">Items received successfully</string>
+    <string name="items_dispatched">Items dispatched successfully</string>
+    <string name="server_error">%1$d %2$s server error. Please try again.</string>
+    <string name="server_error_detail">Server error: %1$s</string>
+    <string name="success">Success</string>
+    <string name="dispatch_success_title">Dispatch Success</string>
+    <string name="dispatch_insufficient_stock">However, these items do not have sufficient stock to be dispatched: </string>
+    <string name="tag_epc">Tag EPC</string>
+</resources>

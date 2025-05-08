@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="match_area">
+        <item>EPC</item>
+        <item>TID</item>
+        <item>User</item>
+        <item>Reserved</item>
+    </string-array>
+</resources>
