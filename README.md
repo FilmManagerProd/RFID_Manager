@@ -8,6 +8,39 @@ RFID Manager is an Android application designed to manage and scan RFID tags. It
 - **RFID Scanning**: Efficiently scan and process RFID tags.
 - **User Interface**: Intuitive UI for managing scanning operations.
 
+## Installation
+- On your Laptop or PC, go to [https://developer.android.com/tools/releases/platform-tools](https://developer.android.com/tools/releases/platform-tools)
+- Install SDK Platform-Tools for your Operating System (OS). E.g Windows, MacOS or Linux.
+- After installation is complete, open the Command Prompt or Terminal on your Laptop or PC.
+- For Windows, press `Windows + R` and type `cmd`. Open the Command Prompt.
+- For MacOS, press `Command + SPACE` to launch Spotlight. Type `Terminal` and open Terminal.
+- For Linux, press `Ctrl + Alt + T` to open the Terminal.
+- In the Command Prompt or Terminal, type the following command: `adb --version` and press `ENTER`
+- You should see something like this:
+```bash
+Joshua@Joshuas-MacBook-Pro ~ % adb --version
+Android Debug Bridge version 1.0.41
+Version 35.0.2-12147458
+Installed as /Users/joshua/Library/Android/sdk/platform-tools/adb
+Running on Darwin 24.3.0 (arm64)
+```
+- If you do not see a version, please retry the installation from [https://developer.android.com/tools/releases/platform-tools](https://developer.android.com/tools/releases/platform-tools)
+- On your Android Handheld PDA Scanner Device, go to `Settings > About Phone` and tap the `Build Number` 7 times to enable Developer Options.
+- Go to `Settings > System > Developer Options` and enable USB Debugging.
+- Connect the Android Handheld PDA Scanner Device to your Laptop or PC via a wired connection. Ensure you use a cable that supports Data Transfer.
+- If you see a prompt on the device asking to trust the computer, tap `Allow`
+- Go back to your Command Prompt or Terminal and type the following command: `adb devices` and press `ENTER`
+- You should see the device listed.
+- Ensure you have downloaded the APK file, and its located in your `Downloads` folder on your Laptop or PC.
+- Go back to your Command Prompt or Terminal and navigate to the `Downloads` folder. E.g `cd Downloads`
+- Run this command: `adb install -r RFID_Manager_ReleaseProdV1.0.apk`
+- You should see this:
+```bash
+Performing Streamed Install
+Success
+```
+- The APP should be successfully installed onto your Android Handheld PDA Scanner Device with the name `RFID`
+
 ## Usage
 - Launch the application.
 - Use the main interface to perform scanning operations.
@@ -32,6 +65,43 @@ RFID 管理器是一款 Android 应用，旨在管理和扫描 RFID 标签。它
 - **语言管理**：支持英文和简体中文模式
 - **RFID 扫描**：高效扫描并处理 RFID 标签
 - **用户界面**：直观的界面用于管理扫描操作
+
+## 安装指南
+
+- 在你的笔记本或电脑上，访问 [https://developer.android.com/tools/releases/platform-tools](https://developer.android.com/tools/releases/platform-tools)
+- 根据你的操作系统（例如 Windows、MacOS 或 Linux）安装 SDK Platform-Tools。
+- 安装完成后，在你的笔记本或电脑上打开命令提示符或终端。
+- 对于 Windows，按下 `Windows + R` 并输入 `cmd`，打开命令提示符。
+- 对于 MacOS，按下 `Command + SPACE` 打开 Spotlight，输入 Terminal 并打开终端。
+- 对于 Linux，按下 `Ctrl + Alt + T` 打开终端。
+- 在命令提示符或终端中输入以下命令：`adb --version`，然后按下 `ENTER` 键。
+- 你应该会看到类似以下的输出：
+
+```bash
+Joshua@Joshuas-MacBook-Pro ~ % adb --version
+Android Debug Bridge version 1.0.41
+Version 35.0.2-12147458
+Installed as /Users/joshua/Library/Android/sdk/platform-tools/adb
+Running on Darwin 24.3.0 (arm64)
+```
+- 如果你没有看到版本信息，请重新从 [https://developer.android.com/tools/releases/platform-tools](https://developer.android.com/tools/releases/platform-tools) 下载安装。
+- 在你的安卓手持 PDA 扫描设备上，进入`设置 > 关于手机`，连续点击 7 次`版本号`以启用开发者选项。
+- 进入`设置 > 系统 > 开发者选项`，启用 USB 调试。
+- 使用有数据传输功能的线缆，将安卓手持 PDA 扫描设备通过有线方式连接到你的笔记本或电脑。
+- 如果设备上弹出信任电脑的提示，请点击“允许”。
+- 回到命令提示符或终端，输入以下命令：`adb devices`，然后按下 `ENTER` 键。
+- 你应该能看到设备已列出。
+- 请确保你已经下载了 APK 文件，并且该文件位于笔记本或电脑的 Downloads 文件夹中。
+- 回到命令提示符或终端，进入 `Downloads` 文件夹，例如：`cd Downloads`
+- 运行以下命令：`adb install -r RFID_Manager_ReleaseProdV1.0.apk`
+- 你应该会看到以下输出：
+```bash
+Performing Streamed Install
+Success
+```
+- 该 APP 应该已经成功安装到你的安卓手持 PDA 扫描设备上，名称为 RFID。
+
+
 
 ## 使用方法
 1. 启动应用程序。
