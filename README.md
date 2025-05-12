@@ -44,10 +44,13 @@ Success
 ## Usage
 - Launch the application.
 - Use the main interface to perform scanning operations.
-- Click "Start" to start scanning for RFID Tags, and "Stop" to stop scanning for RFID Tags.
+- Click "Start" to start scanning for RFID Tags, and "Stop" to stop scanning for RFID Tags
 - Click "Clear" to clear all scanning records.
 - Click "Receive" to add the scanned tags to the Database
 - Click "Dispatch" to dispatch the scanned tags from the Database
+- To write data to tags, ensure only 1 item is scanned and click the "Write" button
+- Key in the value to write to the tag, ensure the tag is in range of the scanner and confirm
+- Ensure that other tags do not interfere with the tag you are writing to
 - Switch languages using the language button.
 - If any errors occur, please ensure that the device is connected to the internet, and try restarting it and launching the app again.
 
@@ -104,14 +107,23 @@ Success
 
 
 ## 使用方法
-1. 启动应用程序。
-2. 使用主界面执行扫描操作。
-3. 点击 “开始” 开始扫描 RFID 标签，点击 “停止” 停止扫描。
-4. 点击 “清除” 清空所有扫描记录。
-5. 点击 “入库” 将扫描到的标签添加到数据库。
-6. 点击 “出库” 将扫描到的标签从数据库中移除。
-7. 使用语言切换按钮在英文和中文之间切换。
-8. 如遇错误，请确保设备已连接互联网，然后重启设备并重新启动应用。
+- 启动应用程序。
+- 使用主界面执行扫描操作。
+- 点击 “开始” 开始扫描 RFID 标签，点击 “停止” 停止扫描。
+- 点击 “清除” 清空所有扫描记录。
+- 点击 “入库” 将扫描到的标签添加到数据库。
+- 点击 “出库” 将扫描到的标签从数据库中移除。
+- 要将数据写入标签，请确保仅扫描 1 个物品，然后点击“写入”按钮。
+- 输入要写入标签的值，确保标签在扫描范围内并确认。
+- 确保其他标签不会干扰您正在写入的标签。
+- 使用语言切换按钮在英文和中文之间切换。
+- 如遇错误，请确保设备已连接互联网，然后重启设备并重新启动应用。
 
 ## 许可证
 本项目基于 GNU 通用公共许可证 v3.0 发布。详情请参阅 LICENSE 文件。
+
+---
+
+Documentation written by [Lincoln](https://github.com/lincoln0623) and [Joshua](https://github.com/Sadliquid)
+
+文档由 [Lincoln](https://github.com/lincoln0623) 和 [Joshua](https://github.com/Sadliquid) 撰写.
