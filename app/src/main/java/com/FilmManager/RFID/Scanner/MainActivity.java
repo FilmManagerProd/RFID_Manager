@@ -604,6 +604,7 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     if (errorCode == 0) {
                         showToast(getString(R.string.write_success));
+                        cleanEvent();
                     } else {
                         String errorMessage = getWriteErrorMessage(errorCode);
                         showToast(getString(R.string.write_failed, errorMessage));
@@ -682,8 +683,8 @@ public class MainActivity extends AppCompatActivity {
         tagMap.clear();
         tagList.clear();
         tagAdapter.notifyDataSetChanged();
-        tagTotal   .setText("0");
-        tagSpeed   .setText("0 t/s");
+        tagTotal.setText("0");
+        tagSpeed.setText("0 t/s");
         tagReadTime.setText("0 ms");
         time = speed = 0;
         if (timer != null) timer.cancel();
