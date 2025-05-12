@@ -4,6 +4,7 @@ public class TagInfo {
     private int index;
     private boolean errorTag;
     private String epc;
+    private String tid;
     private int count;
     public int getIndex() {
         return index;
@@ -22,6 +23,12 @@ public class TagInfo {
     }
     public void setEpc(String epc) {
         this.epc = epc;
+    }
+    public String getTid() {
+        return tid;
+    }
+    public void setTid(String tid) {
+        this.tid = tid;
     }
     public int getCount() {
         return count;

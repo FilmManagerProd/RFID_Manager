@@ -23,4 +23,14 @@
     <string name="dispatch_success_title">Dispatch Success</string>
     <string name="dispatch_insufficient_stock">However, these items do not have sufficient stock to be dispatched: </string>
     <string name="tag_epc">Tag EPC</string>
+    <string name="write">Write</string>
+    <string name="write_dialog_title">Write to Tag</string>
+    <string name="tag_type">Tag Type:</string>
+    <string name="write_value">New value:</string>
+    <string name="keep_in_range">Please keep the tag in range throughout the write process.</string>
+    <string name="write_success">Write successful!</string>
+    <string name="write_failed">Write failed: %1$s</string>
+    <string name="iso18000_6c">ISO18000–6C</string>
+    <string name="cancel">Cancel</string>
+    <string name="invalid_hex">Invalid hexadecimal value</string>
 </resources>

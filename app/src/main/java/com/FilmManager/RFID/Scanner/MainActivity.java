@@ -12,8 +12,10 @@ import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -25,6 +27,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.FilmManager.RFID.Scanner.utils.PcUtils;
 import com.gg.reader.api.dal.GClient;
 import com.gg.reader.api.protocol.gx.EnumG;
 import com.gg.reader.api.protocol.gx.LogBaseEpcInfo;
@@ -37,6 +40,8 @@ import com.FilmManager.RFID.Scanner.adapter.TagAdapter;
 import com.FilmManager.RFID.Scanner.entity.TagInfo;
 import com.FilmManager.RFID.Scanner.utils.GlobalClient;
 import com.FilmManager.RFID.Scanner.utils.PowerUtil;
+import com.gg.reader.api.protocol.gx.MsgBaseWriteEpc;
+import com.gg.reader.api.protocol.gx.ParamEpcFilter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     private Button inventory_btn;
     private Button receive_btn;
     private Button dispatch_btn;
+    private Button write_btn;
     private RecyclerView listView;
     private TextView tagTotal, tagSpeed, tagReadTime;
     private final GClient client = GlobalClient.getClient();
@@ -89,11 +95,12 @@ public class MainActivity extends AppCompatActivity {
         int totalCount;
     }
 
-    private void setButtonsEnabled(boolean inventory, boolean clean, boolean receive, boolean dispatch) {
+    private void setButtonsEnabled(boolean inventory, boolean clean, boolean receive, boolean dispatch, boolean write) {
         inventory_btn.setEnabled(inventory);
         findViewById(R.id.inventory_clean).setEnabled(clean);
         receive_btn.setEnabled(receive);
         dispatch_btn.setEnabled(dispatch);
+        write_btn.setEnabled(write);
     }
 
     private void showButtonSpinner(Button button, ProgressBar spinner) {
@@ -152,8 +159,9 @@ public class MainActivity extends AppCompatActivity {
         receive_btn = findViewById(R.id.receive_btn);
         dispatch_btn = findViewById(R.id.dispatch_btn);
         languageToggle = findViewById(R.id.language_toggle);
+        write_btn = findViewById(R.id.write_btn);
 
-        setButtonsEnabled(true, true, false, false);
+        setButtonsEnabled(true, true, false, false, tagMap.size() == 1);
 
         listView = findViewById(R.id.read_listView);
         tagTotal = findViewById(R.id.tagTotal);
@@ -173,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
         receive_btn.setOnClickListener(v -> receiveEvent());
         dispatch_btn.setOnClickListener(v -> dispatchEvent());
         languageToggle.setOnClickListener(v -> toggleLanguage());
+        write_btn.setOnClickListener(v -> showWriteDialog());
 
         boolean connected = false;
         try {
@@ -238,6 +247,7 @@ public class MainActivity extends AppCompatActivity {
                     synchronized (tagMap) { tagList.addAll(tagMap.values()); }
                     tagAdapter.notifyDataSetChanged();
                     tagTotal.setText(String.valueOf(tagMap.size()));
+                    setButtonsEnabled(true, true, !tagMap.isEmpty(), !tagMap.isEmpty(), tagMap.size() == 1);
                     break;
                 case 2:
                     tagReadTime.setText(time + " ms");
@@ -266,6 +276,7 @@ public class MainActivity extends AppCompatActivity {
             ti.setIndex(tagMap.size() + 1);
             ti.setErrorTag(info.getResult() != 0);
             ti.setEpc(info.getEpc());
+            ti.setTid(info.getTid());
             ti.setCount(1);
             tagMap.put(key, ti);
         }
@@ -296,7 +307,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             if (getString(R.string.scan).equals(inventory_btn.getText().toString())) {
                 cleanEvent();
-                setButtonsEnabled(true, false, false, false);
+                setButtonsEnabled(true, false, false, false, tagMap.size() == 1);
                 onTagCallback();
                 client.sendSynMsg(new MsgBaseStop());
                 MsgBaseInventoryEpc msg = new MsgBaseInventoryEpc();
@@ -310,7 +321,7 @@ public class MainActivity extends AppCompatActivity {
                 if (timer != null) timer.cancel();
                 inventory_btn.setText(R.string.scan);
                 boolean hasTags = !tagMap.isEmpty();
-                setButtonsEnabled(true, true, hasTags, hasTags);
+                setButtonsEnabled(true, true, hasTags, hasTags, tagMap.size() == 1);
             }
         } catch (Exception e) {
             showToast(getString(R.string.error_generic, e.getMessage()));
@@ -318,7 +329,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void receiveEvent() {
-        setButtonsEnabled(false, false, false, false);
+        setButtonsEnabled(false, false, false, false, tagMap.size() == 1);
         receive_btn.setText("");
         showButtonSpinner(receive_btn, receiveSpinner);
 
@@ -364,7 +375,7 @@ public class MainActivity extends AppCompatActivity {
                     showToast(getString(R.string.items_received));
                     hideButtonSpinner(receive_btn, receiveSpinner);
                     receive_btn.setText(R.string.receive);
-                    setButtonsEnabled(true, true, true, true);
+                    setButtonsEnabled(true, true, true, true, tagMap.size() == 1);
                     cleanEvent();
                 });
 
@@ -374,14 +385,14 @@ public class MainActivity extends AppCompatActivity {
                     showToast(getString(R.string.error_generic, e.getMessage()));
                     hideButtonSpinner(receive_btn, receiveSpinner);
                     receive_btn.setText(R.string.receive);
-                    setButtonsEnabled(true, true, true, true);
+                    setButtonsEnabled(true, true, true, true, tagMap.size() == 1);
                 });
             }
         }).start();
     }
 
     private void dispatchEvent() {
-        setButtonsEnabled(false, false, false, false);
+        setButtonsEnabled(false, false, false, false, tagMap.size() == 1);
         dispatch_btn.setText("");
         showButtonSpinner(dispatch_btn, dispatchSpinner);
 
@@ -459,7 +470,7 @@ public class MainActivity extends AppCompatActivity {
                     showToast(getString(R.string.items_dispatched));
                     hideButtonSpinner(dispatch_btn, dispatchSpinner);
                     dispatch_btn.setText(R.string.dispatch);
-                    setButtonsEnabled(true, true, true, true);
+                    setButtonsEnabled(true, true, true, true, tagMap.size() == 1);
                     cleanEvent();
                 });
 
@@ -469,7 +480,7 @@ public class MainActivity extends AppCompatActivity {
                     showToast(getString(R.string.error_generic, e.getMessage()));
                     hideButtonSpinner(dispatch_btn, dispatchSpinner);
                     dispatch_btn.setText(R.string.dispatch);
-                    setButtonsEnabled(true, true, true, true);
+                    setButtonsEnabled(true, true, true, true, tagMap.size() == 1);
                 });
             }
         }).start();
@@ -547,6 +558,112 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void showWriteDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_write, null);
+
+        EditText writeValue = dialogView.findViewById(R.id.write_value);
+        TextView warningText = dialogView.findViewById(R.id.warning_text);
+
+        // Removed the spinner since we're only handling 6C tags now
+
+        builder.setTitle(R.string.write_dialog_title)
+                .setView(dialogView)
+                .setPositiveButton(R.string.write, (dialog, which) -> {
+                    String value = writeValue.getText().toString();
+                    Log.d("WriteDialog", "Input value: " + value);
+                    if (validateHex(value)) {
+                        Log.d("WriteDialog", "Selected tag type: ISO18000-6C");
+                        performWriteOperation(getString(R.string.iso18000_6c), value.toUpperCase());
+                    } else {
+                        showToast(getString(R.string.invalid_hex));
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private boolean validateHex(String input) {
+        return input.matches("[0-9A-Fa-f]+");
+    }
+
+    private void performWriteOperation(String tagType, String hexData) {
+        new Thread(() -> {
+            try {
+                Log.d("WriteOp", "Stopping inventory...");
+                client.sendSynMsg(new MsgBaseStop());
+
+                if (tagList == null || tagList.isEmpty()) {
+                    Log.e("WriteOp", "Tag list is empty or null.");
+                    runOnUiThread(() ->
+                            showToast(getString(R.string.write_failed, "No tags found")));
+                    return;
+                }
+
+                TagInfo targetTag = tagList.get(0);
+                boolean success = false;
+                String errorMsg = "";
+                int errorCode = -1;
+
+                Log.d("WriteOp", "Performing write: tagType=ISO18000-6C, hexData=" + hexData);
+
+                // Only call write6CTag since we're only handling 6C tags
+                errorCode = write6CTag(hexData);
+                success = (errorCode == 0);
+
+                boolean finalSuccess = success;
+                String finalErrorMsg = errorMsg;
+                runOnUiThread(() -> {
+                    if (finalSuccess) {
+                        showToast(getString(R.string.write_success));
+                    } else {
+                        showToast(getString(R.string.write_failed, finalErrorMsg));
+                    }
+                });
+
+            } catch (Exception e) {
+                Log.e("WriteOp", "Exception during write: " + e.getMessage(), e);
+                runOnUiThread(() ->
+                        showToast(getString(R.string.write_failed, e.getMessage())));
+            }
+        }).start();
+    }
+
+    private int write6CTag(String hexData) throws Exception {
+        // stop inventory first
+        client.sendSynMsg(new MsgBaseStop());
+
+        // assume tagList.get(0) is your target
+        String targetEpc = tagList.get(0).getEpc();
+        int valueLen = PcUtils.getValueLen(hexData);
+
+        // build the write message
+        MsgBaseWriteEpc msg = new MsgBaseWriteEpc();
+        msg.setAntennaEnable(EnumG.AntennaNo_1);
+        msg.setArea(1);           // EPC bank
+        msg.setStart(1);          // start at word 1 (skip PC)
+        msg.setHexPassword("00000000");
+
+        // prepend PC word
+        String pc = PcUtils.getPc(valueLen);
+        String dataWithPc = pc + PcUtils.padLeft(hexData, valueLen*4, '0');
+        msg.setHexWriteData(dataWithPc);
+
+        // build an EPC-area filter
+        ParamEpcFilter filter = new ParamEpcFilter();
+        filter.setArea(EnumG.ParamFilterArea_EPC);
+        filter.setBitStart(32);
+        filter.setBitLength(targetEpc.length() * 4);
+        filter.setHexData(targetEpc);
+        msg.setFilter(filter);
+
+        // send and return result
+        client.sendSynMsg(msg);
+        return msg.getRtCode();
+    }
+
     @SuppressLint("SetTextI18n")
     private void cleanEvent() {
         tagMap.clear();
@@ -561,6 +678,6 @@ public class MainActivity extends AppCompatActivity {
             selectedView.setBackgroundColor(0);
             selectedView = null;
         }
-        setButtonsEnabled(true, true, false, false);
+        setButtonsEnabled(true, true, false, false, tagMap.size() == 1);
     }
 }

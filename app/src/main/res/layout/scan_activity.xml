@@ -177,6 +177,22 @@
             </FrameLayout>
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:gravity="center_horizontal">
+
+            <Button
+                android:id="@+id/write_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAllCaps="false"
+                android:text="@string/write"
+                android:enabled="false"/>
+        </LinearLayout>
+
         <!-- Language Toggle Button below the other controls -->
         <LinearLayout
             android:layout_width="match_parent"

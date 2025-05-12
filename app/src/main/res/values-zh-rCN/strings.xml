@@ -23,4 +23,14 @@
     <string name="dispatch_success_title">发货成功</string>
     <string name="dispatch_insufficient_stock">但是，以下物品库存不足，无法发货：</string>
     <string name="tag_epc">标签 EPC</string>
+    <string name="write">写入</string>
+    <string name="write_dialog_title">写入标签</string>
+    <string name="tag_type">标签类型:</string>
+    <string name="write_value">写入值:</string>
+    <string name="keep_in_range">请在整个写入过程中保持标签在范围内.</string>
+    <string name="write_success">写入成功！</string>
+    <string name="write_failed">写入失败: %1$s</string>
+    <string name="iso18000_6c">ISO18000–6C</string>
+    <string name="cancel">取消</string>
+    <string name="invalid_hex">无效的十六进制值</string>
 </resources>
