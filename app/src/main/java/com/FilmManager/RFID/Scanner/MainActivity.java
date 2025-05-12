@@ -95,12 +95,17 @@ public class MainActivity extends AppCompatActivity {
         int totalCount;
     }
 
-    private void setButtonsEnabled(boolean inventory, boolean clean, boolean receive, boolean dispatch, boolean write) {
-        inventory_btn.setEnabled(inventory);
-        findViewById(R.id.inventory_clean).setEnabled(clean);
-        receive_btn.setEnabled(receive);
-        dispatch_btn.setEnabled(dispatch);
-        write_btn.setEnabled(write);
+    private void setButtonsEnabled(boolean isScanning) {
+        runOnUiThread(() -> {
+            inventory_btn.setEnabled(true);
+            inventory_btn.setText(isScanning ? R.string.stop : R.string.scan);
+
+            findViewById(R.id.inventory_clean).setEnabled(!isScanning);
+            receive_btn.setEnabled(!isScanning && !tagMap.isEmpty());
+            dispatch_btn.setEnabled(!isScanning && !tagMap.isEmpty());
+            write_btn.setEnabled(!isScanning && tagMap.size() == 1);
+            languageToggle.setEnabled(!isScanning);
+        });
     }
 
     private void showButtonSpinner(Button button, ProgressBar spinner) {
@@ -161,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
         languageToggle = findViewById(R.id.language_toggle);
         write_btn = findViewById(R.id.write_btn);
 
-        setButtonsEnabled(true, true, false, false, tagMap.size() == 1);
+        setButtonsEnabled(false);
 
         listView = findViewById(R.id.read_listView);
         tagTotal = findViewById(R.id.tagTotal);
@@ -247,7 +252,11 @@ public class MainActivity extends AppCompatActivity {
                     synchronized (tagMap) { tagList.addAll(tagMap.values()); }
                     tagAdapter.notifyDataSetChanged();
                     tagTotal.setText(String.valueOf(tagMap.size()));
-                    setButtonsEnabled(true, true, !tagMap.isEmpty(), !tagMap.isEmpty(), tagMap.size() == 1);
+                    if (getString(R.string.stop).equals(inventory_btn.getText().toString())) {
+                        setButtonsEnabled(true);
+                    } else {
+                        setButtonsEnabled(false);
+                    }
                     break;
                 case 2:
                     tagReadTime.setText(time + " ms");
@@ -307,7 +316,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             if (getString(R.string.scan).equals(inventory_btn.getText().toString())) {
                 cleanEvent();
-                setButtonsEnabled(true, false, false, false, tagMap.size() == 1);
+                setButtonsEnabled(true);
                 onTagCallback();
                 client.sendSynMsg(new MsgBaseStop());
                 MsgBaseInventoryEpc msg = new MsgBaseInventoryEpc();
@@ -320,16 +329,15 @@ public class MainActivity extends AppCompatActivity {
                 client.sendSynMsg(new MsgBaseStop());
                 if (timer != null) timer.cancel();
                 inventory_btn.setText(R.string.scan);
-                boolean hasTags = !tagMap.isEmpty();
-                setButtonsEnabled(true, true, hasTags, hasTags, tagMap.size() == 1);
+                setButtonsEnabled(false);
             }
         } catch (Exception e) {
             showToast(getString(R.string.error_generic, e.getMessage()));
+            setButtonsEnabled(false);
         }
     }
 
     private void receiveEvent() {
-        setButtonsEnabled(false, false, false, false, tagMap.size() == 1);
         receive_btn.setText("");
         showButtonSpinner(receive_btn, receiveSpinner);
 
@@ -375,7 +383,7 @@ public class MainActivity extends AppCompatActivity {
                     showToast(getString(R.string.items_received));
                     hideButtonSpinner(receive_btn, receiveSpinner);
                     receive_btn.setText(R.string.receive);
-                    setButtonsEnabled(true, true, true, true, tagMap.size() == 1);
+                    setButtonsEnabled(false);
                     cleanEvent();
                 });
 
@@ -385,14 +393,13 @@ public class MainActivity extends AppCompatActivity {
                     showToast(getString(R.string.error_generic, e.getMessage()));
                     hideButtonSpinner(receive_btn, receiveSpinner);
                     receive_btn.setText(R.string.receive);
-                    setButtonsEnabled(true, true, true, true, tagMap.size() == 1);
+                    setButtonsEnabled(false);
                 });
             }
         }).start();
     }
 
     private void dispatchEvent() {
-        setButtonsEnabled(false, false, false, false, tagMap.size() == 1);
         dispatch_btn.setText("");
         showButtonSpinner(dispatch_btn, dispatchSpinner);
 
@@ -470,7 +477,7 @@ public class MainActivity extends AppCompatActivity {
                     showToast(getString(R.string.items_dispatched));
                     hideButtonSpinner(dispatch_btn, dispatchSpinner);
                     dispatch_btn.setText(R.string.dispatch);
-                    setButtonsEnabled(true, true, true, true, tagMap.size() == 1);
+                    setButtonsEnabled(false);
                     cleanEvent();
                 });
 
@@ -480,7 +487,7 @@ public class MainActivity extends AppCompatActivity {
                     showToast(getString(R.string.error_generic, e.getMessage()));
                     hideButtonSpinner(dispatch_btn, dispatchSpinner);
                     dispatch_btn.setText(R.string.dispatch);
-                    setButtonsEnabled(true, true, true, true, tagMap.size() == 1);
+                    setButtonsEnabled(false);
                 });
             }
         }).start();
@@ -520,6 +527,9 @@ public class MainActivity extends AppCompatActivity {
                 list.add(b);
             }
             return list;
+        } catch (Exception e) {
+            showToast(String.valueOf(R.string.failed_fetch));
+            return new ArrayList<>();
         }
     }
 
@@ -549,11 +559,9 @@ public class MainActivity extends AppCompatActivity {
                     showToast(getString(R.string.success));
                 }
             } catch (Exception e) {
-                Log.d("DEBUGGG", "Error: " + e.getMessage());
                 showToast(getString(R.string.error_generic, e.getMessage()));
             }
         } catch (Exception e) {
-            Log.d("DEBUGGG", "Error: " + e.getMessage());
             showToast(getString(R.string.error_generic, e.getMessage()));
         }
     }
@@ -612,8 +620,8 @@ public class MainActivity extends AppCompatActivity {
                 });
 
             } catch (Exception e) {
-                runOnUiThread(() ->
-                        showToast(getString(R.string.write_failed, e.getMessage())));
+                runOnUiThread(() -> showToast(getString(R.string.write_failed, e.getMessage())));
+                cleanEvent();
             }
         }).start();
     }
@@ -692,6 +700,6 @@ public class MainActivity extends AppCompatActivity {
             selectedView.setBackgroundColor(0);
             selectedView = null;
         }
-        setButtonsEnabled(true, true, false, false, tagMap.size() == 1);
+        setButtonsEnabled(false);
     }
 }

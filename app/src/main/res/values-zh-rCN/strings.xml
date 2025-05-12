@@ -19,6 +19,7 @@
     <string name="items_dispatched">物品发出成功</string>
     <string name="server_error">%1$d %2$s 服务器错误。请重试。</string>
     <string name="server_error_detail">服务器错误：%1$s</string>
+    <string name="failed_fetch">获取物品失败</string>
     <string name="success">成功</string>
     <string name="dispatch_success_title">发货成功</string>
     <string name="dispatch_insufficient_stock">但是，以下物品库存不足，无法发货：</string>
