@@ -590,38 +590,27 @@ public class MainActivity extends AppCompatActivity {
     private void performWriteOperation(String tagType, String hexData) {
         new Thread(() -> {
             try {
-                Log.d("WriteOp", "Stopping inventory...");
                 client.sendSynMsg(new MsgBaseStop());
 
                 if (tagList == null || tagList.isEmpty()) {
-                    Log.e("WriteOp", "Tag list is empty or null.");
                     runOnUiThread(() ->
-                            showToast(getString(R.string.write_failed, "No tags found")));
+                            showToast(getString(R.string.write_failed, getString(R.string.write_error_no_tags))));
                     return;
                 }
 
                 TagInfo targetTag = tagList.get(0);
-                boolean success = false;
-                String errorMsg = "";
-                int errorCode = -1;
+                int errorCode = write6CTag(hexData);
 
-                Log.d("WriteOp", "Performing write: tagType=ISO18000-6C, hexData=" + hexData);
-
-                errorCode = write6CTag(hexData);
-                success = (errorCode == 0);
-
-                boolean finalSuccess = success;
-                String finalErrorMsg = errorMsg;
                 runOnUiThread(() -> {
-                    if (finalSuccess) {
+                    if (errorCode == 0) {
                         showToast(getString(R.string.write_success));
                     } else {
-                        showToast(getString(R.string.write_failed, finalErrorMsg));
+                        String errorMessage = getWriteErrorMessage(errorCode);
+                        showToast(getString(R.string.write_failed, errorMessage));
                     }
                 });
 
             } catch (Exception e) {
-                Log.e("WriteOp", "Exception during write: " + e.getMessage(), e);
                 runOnUiThread(() ->
                         showToast(getString(R.string.write_failed, e.getMessage())));
             }
@@ -636,7 +625,7 @@ public class MainActivity extends AppCompatActivity {
 
         MsgBaseWriteEpc msg = new MsgBaseWriteEpc();
         msg.setAntennaEnable(EnumG.AntennaNo_1);
-        msg.setArea(1);
+        msg.setArea(5);
         msg.setStart(1);
         msg.setHexPassword("00000000");
 
@@ -653,6 +642,39 @@ public class MainActivity extends AppCompatActivity {
 
         client.sendSynMsg(msg);
         return msg.getRtCode();
+    }
+
+    private String getWriteErrorMessage(int errorCode) {
+        switch (errorCode) {
+            case 0:
+                return getString(R.string.write_error_success);
+            case 1:
+                return getString(R.string.write_error_tag_lost);
+            case 2:
+                return getString(R.string.write_error_memory_locked);
+            case 3:
+                return getString(R.string.write_error_memory_overrun);
+            case 4:
+                return getString(R.string.write_error_memory_damaged);
+            case 5:
+                return getString(R.string.write_error_not_supported);
+            case 6:
+                return getString(R.string.write_error_password);
+            case 7:
+                return getString(R.string.write_error_memory_other);
+            case 8:
+                return getString(R.string.write_error_inventory_failed);
+            case 9:
+                return getString(R.string.write_error_invalid_parameter);
+            case 10:
+                return getString(R.string.write_error_power);
+            case 11:
+                return getString(R.string.write_error_hardware);
+            case 12:
+                return getString(R.string.write_error_timeout);
+            default:
+                return getString(R.string.write_error_unknown, errorCode);
+        }
     }
 
     @SuppressLint("SetTextI18n")

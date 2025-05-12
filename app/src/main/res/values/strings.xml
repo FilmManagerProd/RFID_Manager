@@ -33,4 +33,23 @@
     <string name="iso18000_6c">ISO18000–6C</string>
     <string name="cancel">Cancel</string>
     <string name="invalid_hex">Invalid hexadecimal value</string>
+
+    <!-- Specific error messages for write operations -->
+    <string name="write_error_success">Success</string>
+    <string name="write_error_tag_lost">Tag lost or no response</string>
+    <string name="write_error_memory_locked">Memory locked or write protected</string>
+    <string name="write_error_memory_overrun">Memory overrun or bad data</string>
+    <string name="write_error_memory_damaged">Tag memory damaged</string>
+    <string name="write_error_not_supported">Tag operation not supported</string>
+    <string name="write_error_password">Access password error</string>
+    <string name="write_error_memory_other">Other memory error</string>
+    <string name="write_error_inventory_failed">Tag inventory failed</string>
+    <string name="write_error_invalid_parameter">Parameter invalid</string>
+    <string name="write_error_power">Power not enough</string>
+    <string name="write_error_hardware">Hardware error</string>
+    <string name="write_error_timeout">Read-write timeout</string>
+    <string name="write_error_unknown">Unknown error (%1$d)</string>
+
+    <!-- No tags found message -->
+    <string name="write_error_no_tags">No tags found</string>
 </resources>

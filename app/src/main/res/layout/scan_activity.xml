@@ -1,6 +1,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -21,7 +22,8 @@
                 android:layout_weight="0.2"
                 android:background="@drawable/layer"
                 android:gravity="center"
-                android:text="@string/no" />
+                android:text="@string/no"
+                tools:ignore="TextContrastCheck" />
 
             <TextView
                 android:layout_width="0dp"
@@ -29,7 +31,8 @@
                 android:layout_weight="1"
                 android:background="@drawable/layer"
                 android:gravity="center"
-                android:text="@string/serial_number" />
+                android:text="@string/serial_number"
+                tools:ignore="TextContrastCheck" />
 
             <TextView
                 android:layout_width="0dp"
@@ -37,7 +40,8 @@
                 android:layout_weight="0.3"
                 android:background="@drawable/layer"
                 android:gravity="center"
-                android:text="@string/quantity" />
+                android:text="@string/quantity"
+                tools:ignore="TextContrastCheck" />
         </LinearLayout>
 
         <!-- Data List -->
@@ -45,7 +49,8 @@
             android:id="@+id/read_listView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <View
             android:layout_width="match_parent"
@@ -112,7 +117,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAllCaps="false"
-                    android:text="@string/scan" />
+                    android:text="@string/scan"
+                    tools:ignore="VisualLintButtonSize" />
 
                 <ProgressBar
                     android:id="@+id/inventory_spinner"
@@ -130,7 +136,8 @@
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:textAllCaps="false"
-                android:text="@string/clear" />
+                android:text="@string/clear"
+                tools:ignore="VisualLintButtonSize" />
 
             <FrameLayout
                 android:layout_width="0dp"
@@ -143,7 +150,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAllCaps="false"
-                    android:text="@string/receive" />
+                    android:text="@string/receive"
+                    tools:ignore="VisualLintButtonSize" />
 
                 <ProgressBar
                     android:id="@+id/receive_spinner"
@@ -165,7 +173,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAllCaps="false"
-                    android:text="@string/dispatch" />
+                    android:text="@string/dispatch"
+                    tools:ignore="VisualLintButtonSize" />
 
                 <ProgressBar
                     android:id="@+id/dispatch_spinner"
@@ -190,7 +199,8 @@
                 android:layout_height="wrap_content"
                 android:textAllCaps="false"
                 android:text="@string/write"
-                android:enabled="false"/>
+                android:enabled="false"
+                tools:ignore="VisualLintButtonSize" />
         </LinearLayout>
 
         <!-- Language Toggle Button below the other controls -->
@@ -206,7 +216,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAllCaps="false"
-                android:text="@string/toggle_language" />
+                android:text="@string/toggle_language"
+                tools:ignore="VisualLintButtonSize" />
         </LinearLayout>
 
     </LinearLayout>

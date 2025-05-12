@@ -33,4 +33,23 @@
     <string name="iso18000_6c">ISO18000–6C</string>
     <string name="cancel">取消</string>
     <string name="invalid_hex">无效的十六进制值</string>
+
+    <!-- 写操作的具体错误信息 -->
+    <string name="write_error_success">成功</string>
+    <string name="write_error_tag_lost">标签丢失或无响应</string>
+    <string name="write_error_memory_locked">内存已锁定或写保护</string>
+    <string name="write_error_memory_overrun">内存溢出或数据错误</string>
+    <string name="write_error_memory_damaged">标签内存损坏</string>
+    <string name="write_error_not_supported">不支持的标签操作</string>
+    <string name="write_error_password">访问密码错误</string>
+    <string name="write_error_memory_other">其他内存错误</string>
+    <string name="write_error_inventory_failed">标签盘点失败</string>
+    <string name="write_error_invalid_parameter">参数无效</string>
+    <string name="write_error_power">功率不足</string>
+    <string name="write_error_hardware">硬件错误</string>
+    <string name="write_error_timeout">读写超时</string>
+    <string name="write_error_unknown">未知错误（%1$d）</string>
+
+    <!-- 未发现标签信息 -->
+    <string name="write_error_no_tags">未发现标签</string>
 </resources>
