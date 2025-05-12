@@ -100,13 +100,36 @@ public class MainActivity extends AppCompatActivity {
             inventory_btn.setEnabled(true);
             inventory_btn.setText(isScanning ? R.string.stop : R.string.scan);
 
-            findViewById(R.id.inventory_clean).setEnabled(!isScanning);
+            findViewById(R.id.inventory_clean).setEnabled(!isScanning && !tagMap.isEmpty());
             receive_btn.setEnabled(!isScanning && !tagMap.isEmpty());
             dispatch_btn.setEnabled(!isScanning && !tagMap.isEmpty());
             write_btn.setEnabled(!isScanning && tagMap.size() == 1);
             languageToggle.setEnabled(!isScanning);
         });
     }
+
+    private void disableAllButtons() {
+        runOnUiThread(() -> {
+            inventory_btn.setEnabled(false);
+            findViewById(R.id.inventory_clean).setEnabled(false);
+            receive_btn.setEnabled(false);
+            dispatch_btn.setEnabled(false);
+            write_btn.setEnabled(false);
+            languageToggle.setEnabled(false);
+        });
+    }
+
+    private void enableAllButtons() {
+        runOnUiThread(() -> {
+            inventory_btn.setEnabled(true);
+            findViewById(R.id.inventory_clean).setEnabled(!tagMap.isEmpty());
+            receive_btn.setEnabled(!tagMap.isEmpty());
+            dispatch_btn.setEnabled(!tagMap.isEmpty());
+            write_btn.setEnabled(tagMap.size() == 1);
+            languageToggle.setEnabled(true);
+        });
+    }
+
 
     private void showButtonSpinner(Button button, ProgressBar spinner) {
         runOnUiThread(() -> {
@@ -342,6 +365,7 @@ public class MainActivity extends AppCompatActivity {
         showButtonSpinner(receive_btn, receiveSpinner);
 
         new Thread(() -> {
+            disableAllButtons();
             try {
                 List<Barcode> barcodes = fetchBarcodes();
                 Map<String, Integer> epcCounts = groupTagsByEpc();
@@ -404,6 +428,7 @@ public class MainActivity extends AppCompatActivity {
         showButtonSpinner(dispatch_btn, dispatchSpinner);
 
         new Thread(() -> {
+            disableAllButtons();
             try {
                 List<Barcode> barcodes = fetchBarcodes();
                 Map<String, Integer> epcCounts = groupTagsByEpc();
