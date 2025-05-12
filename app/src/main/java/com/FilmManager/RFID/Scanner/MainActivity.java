@@ -625,7 +625,7 @@ public class MainActivity extends AppCompatActivity {
 
         MsgBaseWriteEpc msg = new MsgBaseWriteEpc();
         msg.setAntennaEnable(EnumG.AntennaNo_1);
-        msg.setArea(5);
+        msg.setArea(1);
         msg.setStart(1);
         msg.setHexPassword("00000000");
 
