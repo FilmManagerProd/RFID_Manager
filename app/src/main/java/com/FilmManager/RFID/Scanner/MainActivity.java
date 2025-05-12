@@ -565,8 +565,6 @@ public class MainActivity extends AppCompatActivity {
         EditText writeValue = dialogView.findViewById(R.id.write_value);
         TextView warningText = dialogView.findViewById(R.id.warning_text);
 
-        // Removed the spinner since we're only handling 6C tags now
-
         builder.setTitle(R.string.write_dialog_title)
                 .setView(dialogView)
                 .setPositiveButton(R.string.write, (dialog, which) -> {
@@ -609,7 +607,6 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.d("WriteOp", "Performing write: tagType=ISO18000-6C, hexData=" + hexData);
 
-                // Only call write6CTag since we're only handling 6C tags
                 errorCode = write6CTag(hexData);
                 success = (errorCode == 0);
 
@@ -632,26 +629,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private int write6CTag(String hexData) throws Exception {
-        // stop inventory first
         client.sendSynMsg(new MsgBaseStop());
 
-        // assume tagList.get(0) is your target
         String targetEpc = tagList.get(0).getEpc();
         int valueLen = PcUtils.getValueLen(hexData);
 
-        // build the write message
         MsgBaseWriteEpc msg = new MsgBaseWriteEpc();
         msg.setAntennaEnable(EnumG.AntennaNo_1);
-        msg.setArea(1);           // EPC bank
-        msg.setStart(1);          // start at word 1 (skip PC)
+        msg.setArea(1);
+        msg.setStart(1);
         msg.setHexPassword("00000000");
 
-        // prepend PC word
         String pc = PcUtils.getPc(valueLen);
         String dataWithPc = pc + PcUtils.padLeft(hexData, valueLen*4, '0');
         msg.setHexWriteData(dataWithPc);
 
-        // build an EPC-area filter
         ParamEpcFilter filter = new ParamEpcFilter();
         filter.setArea(EnumG.ParamFilterArea_EPC);
         filter.setBitStart(32);
@@ -659,7 +651,6 @@ public class MainActivity extends AppCompatActivity {
         filter.setHexData(targetEpc);
         msg.setFilter(filter);
 
-        // send and return result
         client.sendSynMsg(msg);
         return msg.getRtCode();
     }
